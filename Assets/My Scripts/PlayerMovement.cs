@@ -1,17 +1,16 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5f;
-    public float JumpPower = 7;
 
     public Rigidbody rb;
 
     public Camera camera;
     public Transform cameraPivot;
 
-    public float MouseSensitivity = 3;
+    public float MouseSensitivity = 3f;
     float xRotation = 0f;
 
 
@@ -21,12 +20,9 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        camera.transform.localRotation = Quaternion.identity;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
-
-
     }
 
     // Update is called once per frame
@@ -46,12 +42,6 @@ public class PlayerMovement : MonoBehaviour
         //I reduce my total movement to 1 and then multiply it by my speed
         move = move * speed;
 
-        //If I hit jump and am on the ground, I jump
-        if (JumpPower > 0 && Input.GetKeyDown(KeyCode.Space))
-            move.y = JumpPower;
-        else  //Otherwise, my Y velocity is whatever it was last frame
-            move.y = rb.linearVelocity.y;
-
         //Plug my calculated velocity into the rigidbody
         rb.linearVelocity = move;
     }
@@ -63,10 +53,9 @@ public class PlayerMovement : MonoBehaviour
 
         transform.Rotate(0, mouseX, 0);
 
-        xRotation += mouseY * MouseSensitivity / 2 * Time.deltaTime;
-        xRotation = Mathf.Clamp(xRotation, -30, 30);
+        xRotation += mouseY;
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
-        cameraPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 }
